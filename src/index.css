@@ -1,0 +1,64 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --black: #000000;
+  --white: #FFFFFF;
+  --blue: #007BFF;
+  --cyan: #00C2FF;
+  --teal: #00D4A7;
+  --green: #39FF14;
+  --yellow: #F5FF00;
+  --gradient: linear-gradient(90deg, #007BFF, #00C2FF, #00D4A7, #39FF14, #F5FF00);
+  --gradient-btn: linear-gradient(135deg, #007BFF, #39FF14);
+  --check-green: #39FF14;
+  --check-red: #FF4444;
+  --card-bg: #111111;
+  --card-border: #222222;
+  --text-muted: #999999;
+
+  font-family: 'Montserrat', sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--black);
+  color: var(--white);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#root {
+  width: 100%;
+}
+
+a {
+  color: var(--cyan);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+input {
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--black);
+}
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 3px;
+}
