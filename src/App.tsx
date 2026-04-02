@@ -46,34 +46,33 @@ const STATUS_TEXT: Record<string, string> = {
 };
 
 /* ─── SVG Icons ─── */
-function RadarIcon() {
+function InstallIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="#00C2FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="10" />
-      <circle cx="12" cy="12" r="6" />
-      <circle cx="12" cy="12" r="2" />
-      <line x1="12" y1="2" x2="12" y2="6" />
-      <line x1="12" y1="12" x2="12" y2="2" stroke="#39FF14" strokeWidth="2" />
+      <rect x="3" y="3" width="18" height="18" rx="3" />
+      <path d="M8 12l4 4 4-4" stroke="#39FF14" strokeWidth="2" />
+      <path d="M12 8v8" />
     </svg>
   );
 }
 
-function ShieldIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="#00D4A7" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 2l8 4v6c0 5.25-3.5 9.74-8 11-4.5-1.26-8-5.75-8-11V6l8-4z" />
-      <polyline points="9 12 11 14 15 10" stroke="#39FF14" strokeWidth="2" />
-    </svg>
-  );
-}
-
-function PeopleIcon() {
+function LeadsIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="#007BFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-      <circle cx="9" cy="7" r="4" />
-      <path d="M23 21v-2a4 4 0 00-3-3.87" stroke="#39FF14" />
-      <path d="M16 3.13a4 4 0 010 7.75" stroke="#39FF14" />
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+      <path d="M19 8l2 2-2 2" stroke="#39FF14" strokeWidth="2" />
+    </svg>
+  );
+}
+
+function SandyIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="#00D4A7" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+      <circle cx="9" cy="10" r="1" fill="#39FF14" stroke="none" />
+      <circle cx="12" cy="10" r="1" fill="#39FF14" stroke="none" />
+      <circle cx="15" cy="10" r="1" fill="#39FF14" stroke="none" />
     </svg>
   );
 }
@@ -115,6 +114,20 @@ function ScoreCircle({ passed, total }: { passed: number; total: number }) {
   );
 }
 
+/* ─── FAQ Item ─── */
+function FaqItem({ question, answer }: { question: string; answer: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className={`faq-item ${open ? 'open' : ''}`} onClick={() => setOpen((o) => !o)}>
+      <div className="faq-question">
+        <span>{question}</span>
+        <span className="faq-chevron">{open ? '−' : '+'}</span>
+      </div>
+      {open && <div className="faq-answer">{answer}</div>}
+    </div>
+  );
+}
+
 /* ─── Main App ─── */
 function App() {
   const demoRef = useRef<HTMLDivElement>(null);
@@ -125,11 +138,11 @@ function App() {
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationDone, setVerificationDone] = useState(false);
 
-  /* Waitlist state */
-  const [waitlistForm, setWaitlistForm] = useState({ name: '', email: '', company: '' });
-  const [waitlistSubmitting, setWaitlistSubmitting] = useState(false);
-  const [waitlistSuccess, setWaitlistSuccess] = useState(false);
-  const [waitlistError, setWaitlistError] = useState('');
+  /* Notify form state */
+  const [notifyForm, setNotifyForm] = useState({ name: '', email: '', company: '' });
+  const [notifySubmitting, setNotifySubmitting] = useState(false);
+  const [notifySuccess, setNotifySuccess] = useState(false);
+  const [notifyError, setNotifyError] = useState('');
 
   const scrollToDemo = useCallback(() => {
     demoRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -148,15 +161,10 @@ function App() {
     setChecks(initial);
 
     for (let i = 0; i < CHECKS.length; i++) {
-      // Set to "checking"
       setChecks((prev) =>
         prev.map((item, idx) => (idx === i ? { ...item, status: 'checking' } : item))
       );
-
-      // Random delay 200-400ms
       await new Promise((r) => setTimeout(r, 200 + Math.random() * 200));
-
-      // Set to "done"
       setChecks((prev) =>
         prev.map((item, idx) => (idx === i ? { ...item, status: 'done' } : item))
       );
@@ -172,61 +180,111 @@ function App() {
     runVerification();
   };
 
-  /* Waitlist submission */
-  const handleWaitlistSubmit = async (e: React.FormEvent) => {
+  /* Notify form submission */
+  const handleNotifySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!waitlistForm.name || !waitlistForm.email) return;
+    if (!notifyForm.name || !notifyForm.email) return;
 
-    setWaitlistSubmitting(true);
-    setWaitlistError('');
+    setNotifySubmitting(true);
+    setNotifyError('');
 
     try {
       if (isSupabaseConfigured && supabase) {
         const { error } = await supabase.from('data_driver_leads').insert({
-          name: waitlistForm.name,
-          email: waitlistForm.email,
-          company: waitlistForm.company || null,
+          name: notifyForm.name,
+          email: notifyForm.email,
+          company: notifyForm.company || null,
         });
         if (error) throw error;
       }
-      setWaitlistSuccess(true);
+      setNotifySuccess(true);
     } catch (err: unknown) {
-      console.error('Waitlist error:', err);
-      // Graceful degradation — show success even if Supabase fails
+      console.error('Notify error:', err);
       if (!isSupabaseConfigured) {
-        setWaitlistSuccess(true);
+        setNotifySuccess(true);
       } else {
-        setWaitlistError('Something went wrong. Please try again.');
+        setNotifyError('Something went wrong. Please try again.');
       }
     } finally {
-      setWaitlistSubmitting(false);
+      setNotifySubmitting(false);
     }
   };
 
   const passed = checks.filter((c) => c.pass && c.status === 'done').length;
   const failed = checks.filter((c) => !c.pass && c.status === 'done').length;
 
+  const CHECKOUT_URL = 'https://data-driver-form.vercel.app?ref=datadriverpro';
+
   return (
     <>
       {/* ─── HERO ─── */}
       <section className="hero">
-        <h1>Stop Chasing Dead Leads</h1>
+        <div className="hero-badge">AI Sales Automation for GoHighLevel</div>
+        <h1>Stop Chasing<br />Dead Leads</h1>
         <div className="rainbow-line" />
         <p>
-          Data Driver verifies intent signals before you waste a single call.
-          See it work — free.
+          Sandy texts, calls, qualifies, and books appointments from verified intent data —
+          so you close instead of chase.
         </p>
-        <button className="hero-cta" onClick={scrollToDemo}>
-          Try the Verification Demo
-        </button>
+        <a href={CHECKOUT_URL} className="hero-cta">
+          Try Data Driver Pro — First Month Free
+        </a>
+        <div className="hero-sub-cta">
+          2,000 verified contacts included. No commitment.
+        </div>
       </section>
 
-      {/* ─── DEMO ─── */}
+      {/* ─── HOW IT WORKS ─── */}
+      <section className="how-section">
+        <h2>How It Works</h2>
+        <div className="rainbow-line" />
+        <p className="how-subtitle">Three steps from signal to sale</p>
+
+        <div className="how-grid">
+          <div className="how-card">
+            <div className="how-step-number">01</div>
+            <div className="how-icon">
+              <InstallIcon />
+            </div>
+            <h3>Install in 60 Seconds</h3>
+            <p>
+              One-click GHL snapshot. All pipelines, workflows, and AI agents pre-built.
+              You walk in, everything's already running.
+            </p>
+          </div>
+
+          <div className="how-card">
+            <div className="how-step-number">02</div>
+            <div className="how-icon">
+              <LeadsIcon />
+            </div>
+            <h3>Buy Your Leads</h3>
+            <p>
+              Pick your market, apply filters, pay per contact. Leads land in your CRM
+              instantly — verified against 15 data points.
+            </p>
+          </div>
+
+          <div className="how-card">
+            <div className="how-step-number">03</div>
+            <div className="how-icon">
+              <SandyIcon />
+            </div>
+            <h3>Sandy Takes Over</h3>
+            <p>
+              AI texts, calls, qualifies, books. You just show up and close. Sandy
+              never sleeps, never forgets a follow-up.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── VERIFICATION DEMO ─── */}
       <section className="demo-section" ref={demoRef} id="demo">
-        <h2>Interactive Verification Demo</h2>
+        <h2>See Verification In Action</h2>
         <div className="rainbow-line" />
         <p className="demo-subtitle">
-          Enter any contact info. We'll show you what real-time data verification looks like.
+          Enter any contact info. Watch real-time verification across 15 data points.
         </p>
 
         {!isVerifying && !verificationDone && (
@@ -263,7 +321,6 @@ function App() {
           </form>
         )}
 
-        {/* Verification animation */}
         {(isVerifying || verificationDone) && (
           <div className="verification-container">
             <div className="verification-header">
@@ -305,7 +362,6 @@ function App() {
               ))}
             </ul>
 
-            {/* Score card */}
             {verificationDone && (
               <div className="score-card">
                 <div className="score-circle-wrapper">
@@ -323,92 +379,212 @@ function App() {
                     <span>{failed} failed</span>
                   </div>
                 </div>
+                <a href={CHECKOUT_URL} className="score-card-cta">
+                  Get Leads Like This — Start Free Month
+                </a>
               </div>
             )}
           </div>
         )}
       </section>
 
-      {/* ─── WAITLIST ─── */}
-      {verificationDone && (
-        <section className="waitlist-section">
-          <h3>Want verified leads like this delivered daily?</h3>
-          <div className="rainbow-line" />
-          <p>Join the waitlist and be the first to get access to Data Driver.</p>
-
-          {waitlistSuccess ? (
-            <div className="waitlist-success">
-              You're on the list. We'll reach out when your verified leads are ready.
-            </div>
-          ) : (
-            <form className="waitlist-form" onSubmit={handleWaitlistSubmit}>
-              <input
-                type="text"
-                placeholder="Your name"
-                value={waitlistForm.name}
-                onChange={(e) => setWaitlistForm((f) => ({ ...f, name: e.target.value }))}
-                required
-              />
-              <input
-                type="email"
-                placeholder="Email address"
-                value={waitlistForm.email}
-                onChange={(e) => setWaitlistForm((f) => ({ ...f, email: e.target.value }))}
-                required
-              />
-              <input
-                type="text"
-                placeholder="Company (optional)"
-                value={waitlistForm.company}
-                onChange={(e) => setWaitlistForm((f) => ({ ...f, company: e.target.value }))}
-              />
-              <button type="submit" className="waitlist-submit" disabled={waitlistSubmitting}>
-                {waitlistSubmitting ? 'Joining...' : 'Join the Waitlist'}
-              </button>
-              {waitlistError && <div className="waitlist-error">{waitlistError}</div>}
-            </form>
-          )}
-        </section>
-      )}
-
-      {/* ─── HOW IT WORKS ─── */}
-      <section className="how-section">
-        <h2>How It Works</h2>
+      {/* ─── WHAT'S INCLUDED ─── */}
+      <section className="features-section">
+        <h2>What's Included</h2>
         <div className="rainbow-line" />
-        <p className="how-subtitle">Three steps from signal to sale</p>
+        <p className="features-subtitle">
+          Everything you need to run a fully automated sales operation — inside GHL.
+        </p>
 
-        <div className="how-grid">
-          <div className="how-card">
-            <div className="how-icon">
-              <RadarIcon />
-            </div>
-            <h3>Detect Intent Signals</h3>
-            <p>
-              Data Driver identifies people actively searching for insurance and
-              financial services online.
-            </p>
+        <div className="features-grid">
+          <div className="feature-card">
+            <div className="feature-icon">💬</div>
+            <h3>Sandy AI (SMS + Voice)</h3>
+            <p>Qualifies leads 24/7 via text and phone. Warm, direct, never robotic.</p>
           </div>
-
-          <div className="how-card">
-            <div className="how-icon">
-              <ShieldIcon />
-            </div>
-            <h3>Verify 15 Data Points</h3>
-            <p>
-              Every contact verified against our 10/15 standard before it reaches you.
-            </p>
+          <div className="feature-card">
+            <div className="feature-icon">📞</div>
+            <h3>6 VAPI Voice Assistants</h3>
+            <p>Inbound and outbound AI calling. Handles objections, books appointments.</p>
           </div>
-
-          <div className="how-card">
-            <div className="how-icon">
-              <PeopleIcon />
-            </div>
-            <h3>Deliver Ready-to-Buy Contacts</h3>
-            <p>
-              You get contacts who already want what you're offering. No cold calls.
-            </p>
+          <div className="feature-card">
+            <div className="feature-icon">🎥</div>
+            <h3>Sandy Live Avatar</h3>
+            <p>AI video sales calls. Sandy shows up on screen so your leads feel heard.</p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon">📊</div>
+            <h3>Lead Scoring Engine</h3>
+            <p>Scores 0–100 across 15 data points. You only work the hottest contacts.</p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon">🔁</div>
+            <h3>Pre-Built Pipelines</h3>
+            <p>Lead → Appointment → Close → Onboard. Every stage mapped and automated.</p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon">⏰</div>
+            <h3>Automated Follow-Up</h3>
+            <p>No-show recovery, re-engagement sequences, drip nurture campaigns.</p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon">🎙️</div>
+            <h3>Call Recording + AI Analysis</h3>
+            <p>Every call transcribed and summarized. Know what's working and what's not.</p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon">🖥️</div>
+            <h3>Landing Pages + Funnels</h3>
+            <p>AI-generated pages inside your GHL account. Built and live in minutes.</p>
           </div>
         </div>
+      </section>
+
+      {/* ─── PRICING ─── */}
+      <section className="pricing-section">
+        <h2>Simple Pricing</h2>
+        <div className="rainbow-line" />
+        <p className="pricing-subtitle">One plan. Everything included. Cancel anytime.</p>
+
+        <div className="pricing-card">
+          <div className="pricing-badge">Most Popular</div>
+          <div className="pricing-name">Data Driver Pro</div>
+          <div className="pricing-amount">
+            <span className="pricing-dollar">$</span>997
+            <span className="pricing-period">/mo</span>
+          </div>
+          <div className="pricing-trial">First month FREE with your first lead purchase</div>
+
+          <ul className="pricing-features">
+            <li><span className="pricing-check">✓</span> Sandy AI — SMS + Voice qualification</li>
+            <li><span className="pricing-check">✓</span> 6 VAPI Voice Assistants</li>
+            <li><span className="pricing-check">✓</span> Sandy Live Avatar video calls</li>
+            <li><span className="pricing-check">✓</span> Lead Scoring Engine (15 data points)</li>
+            <li><span className="pricing-check">✓</span> Pre-Built GHL Pipelines</li>
+            <li><span className="pricing-check">✓</span> Automated Follow-Up Sequences</li>
+            <li><span className="pricing-check">✓</span> Call Recording + AI Analysis</li>
+            <li><span className="pricing-check">✓</span> Landing Pages + Funnels</li>
+            <li><span className="pricing-check">✓</span> 2,000 verified contacts/month ($500 value)</li>
+            <li><span className="pricing-check">✓</span> Full GHL snapshot — ready in 60 seconds</li>
+            <li><span className="pricing-check">✓</span> Cancel anytime, no contracts</li>
+          </ul>
+
+          <a href={CHECKOUT_URL} className="pricing-cta">
+            Start Free Month
+          </a>
+          <div className="pricing-fine-print">
+            $0.25/contact for additional leads. No minimums.
+          </div>
+        </div>
+      </section>
+
+      {/* ─── SANDY SECTION ─── */}
+      <section className="sandy-section">
+        <div className="sandy-content">
+          <div className="sandy-text">
+            <div className="sandy-eyebrow">Your AI Sales Assistant</div>
+            <h2>Meet Sandy</h2>
+            <div className="rainbow-line rainbow-line-left" />
+            <p>
+              Sandy Beach is your AI sales assistant. She's warm, direct, and never sleeps.
+            </p>
+            <p>
+              She'll text your leads within 60 seconds of them coming in, qualify them through
+              natural conversation, handle objections, and book appointments on your calendar —
+              without you lifting a finger.
+            </p>
+            <p>
+              While you're on a call, Sandy's already working the next 50 leads. While you
+              sleep, she's following up on no-shows. You show up to close. That's it.
+            </p>
+            <a href={CHECKOUT_URL} className="sandy-cta">
+              Let Sandy Work For You
+            </a>
+          </div>
+          <div className="sandy-avatar">
+            <div className="sandy-avatar-placeholder">
+              <div className="sandy-avatar-glow" />
+              <div className="sandy-avatar-inner">
+                <div className="sandy-avatar-icon">🤖</div>
+                <div className="sandy-avatar-label">Sandy Live Avatar</div>
+                <div className="sandy-avatar-sub">AI Video Sales Calls</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── FAQ ─── */}
+      <section className="faq-section">
+        <h2>Frequently Asked Questions</h2>
+        <div className="rainbow-line" />
+
+        <div className="faq-list">
+          <FaqItem
+            question="What is Data Driver Pro?"
+            answer="Data Driver Pro is a full AI sales automation platform built inside GoHighLevel. It includes Sandy (your AI assistant), pre-built pipelines, lead scoring, 6 voice AI agents, and verified intent data — everything wired together and ready to run the moment you install."
+          />
+          <FaqItem
+            question="How do I get started?"
+            answer="Install the GHL snapshot, connect your calendar, and buy your first batch of leads. The whole setup takes under 3 minutes. Sandy starts texting and calling your leads automatically."
+          />
+          <FaqItem
+            question="What kind of leads am I getting?"
+            answer="Verified intent contacts — people actively searching for what you offer. Every contact goes through 15-point verification before landing in your CRM. You pay $0.25 per contact, no minimums."
+          />
+          <FaqItem
+            question="Do I need GoHighLevel?"
+            answer="Yes. Data Driver Pro lives inside GHL sub-accounts. If you don't have GHL, you'll need it — but setup is included and we'll walk you through it."
+          />
+          <FaqItem
+            question="Can I cancel?"
+            answer="Yes, anytime. No contracts, no cancellation fees. If it's not working for you, you stop paying. That's it."
+          />
+          <FaqItem
+            question="What does Sandy actually do?"
+            answer="Sandy texts every new lead within 60 seconds. She qualifies them through natural conversation, handles common objections, and books appointments directly on your calendar. She also does outbound calls via VAPI, manages no-show follow-up, and runs re-engagement sequences. You just close."
+          />
+        </div>
+      </section>
+
+      {/* ─── NOTIFY / SECONDARY CTA ─── */}
+      <section className="notify-section">
+        <h3>Not ready yet? Get notified when new features drop.</h3>
+        <div className="rainbow-line" />
+        <p>We ship fast. Drop your email and we'll keep you in the loop.</p>
+
+        {notifySuccess ? (
+          <div className="waitlist-success">
+            You're on the list. We'll reach out when there's something worth knowing.
+          </div>
+        ) : (
+          <form className="waitlist-form" onSubmit={handleNotifySubmit}>
+            <input
+              type="text"
+              placeholder="Your name"
+              value={notifyForm.name}
+              onChange={(e) => setNotifyForm((f) => ({ ...f, name: e.target.value }))}
+              required
+            />
+            <input
+              type="email"
+              placeholder="Email address"
+              value={notifyForm.email}
+              onChange={(e) => setNotifyForm((f) => ({ ...f, email: e.target.value }))}
+              required
+            />
+            <input
+              type="text"
+              placeholder="Company (optional)"
+              value={notifyForm.company}
+              onChange={(e) => setNotifyForm((f) => ({ ...f, company: e.target.value }))}
+            />
+            <button type="submit" className="waitlist-submit" disabled={notifySubmitting}>
+              {notifySubmitting ? 'Saving...' : 'Get Notified'}
+            </button>
+            {notifyError && <div className="waitlist-error">{notifyError}</div>}
+          </form>
+        )}
       </section>
 
       {/* ─── FOOTER ─── */}
