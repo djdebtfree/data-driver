@@ -66,13 +66,12 @@ function LeadsIcon() {
   );
 }
 
-function SandyIcon() {
+function MarkupIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="#00D4A7" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
-      <circle cx="9" cy="10" r="1" fill="#39FF14" stroke="none" />
-      <circle cx="12" cy="10" r="1" fill="#39FF14" stroke="none" />
-      <circle cx="15" cy="10" r="1" fill="#39FF14" stroke="none" />
+      <line x1="12" y1="1" x2="12" y2="23" />
+      <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
+      <path d="M16 19l2-2" stroke="#39FF14" strokeWidth="2" />
     </svg>
   );
 }
@@ -213,32 +212,62 @@ function App() {
   const passed = checks.filter((c) => c.pass && c.status === 'done').length;
   const failed = checks.filter((c) => !c.pass && c.status === 'done').length;
 
-  const CHECKOUT_URL = 'https://data-driver-form.vercel.app?ref=datadriverpro';
+  const MARKETPLACE_URL = '#'; /* GHL Marketplace install link — fill in when live */
+  const LEADS_URL = 'https://data-driver-form.vercel.app?ref=datadriverpro';
 
   return (
     <>
       {/* ─── HERO ─── */}
       <section className="hero">
-        <div className="hero-badge">AI Sales Automation for GoHighLevel</div>
-        <h1>Stop Chasing<br />Dead Leads</h1>
+        <div className="hero-badge">Free GHL Marketplace App</div>
+        <h1>Buy Leads at 25 Cents.<br />Sell Them for a Dollar.</h1>
         <div className="rainbow-line" />
         <p>
-          Sandy texts, calls, qualifies, and books appointments from verified intent data —
-          so you close instead of chase.
+          Install Data Driver from the GHL Marketplace. Buy verified contacts at $0.25 each.
+          Resell to your sub-account clients at whatever you want. Keep the profit.
         </p>
-        <a href={CHECKOUT_URL} className="hero-cta">
-          Try Data Driver Pro — First Month Free
+        <a href={MARKETPLACE_URL} className="hero-cta">
+          Install Free from GHL Marketplace
         </a>
         <div className="hero-sub-cta">
-          2,000 verified contacts included. No commitment.
+          Free to install. 14-day trial. No credit card required.
         </div>
+      </section>
+
+      {/* ─── THE MATH ─── */}
+      <section className="math-section">
+        <h2>The Math Is Simple</h2>
+        <div className="rainbow-line" />
+        <div className="math-grid">
+          <div className="math-card">
+            <div className="math-label">You Buy</div>
+            <div className="math-value">1,000 contacts</div>
+            <div className="math-detail">at $0.25 each = <strong>$250</strong></div>
+          </div>
+          <div className="math-arrow">&#8594;</div>
+          <div className="math-card">
+            <div className="math-label">You Sell</div>
+            <div className="math-value">to 10 clients</div>
+            <div className="math-detail">at $0.50 each = <strong>$500</strong></div>
+          </div>
+          <div className="math-arrow">&#8594;</div>
+          <div className="math-card math-card-profit">
+            <div className="math-label">You Profit</div>
+            <div className="math-value-big">$250</div>
+            <div className="math-detail">on a single batch</div>
+          </div>
+        </div>
+        <p className="math-footnote">
+          Charge $0.50, $0.75, or $1.00 per contact — your markup, your rules.
+          Most agencies clear $500+ in the first two weeks.
+        </p>
       </section>
 
       {/* ─── HOW IT WORKS ─── */}
       <section className="how-section">
         <h2>How It Works</h2>
         <div className="rainbow-line" />
-        <p className="how-subtitle">Three steps from signal to sale</p>
+        <p className="how-subtitle">Three steps to a new revenue stream</p>
 
         <div className="how-grid">
           <div className="how-card">
@@ -246,10 +275,10 @@ function App() {
             <div className="how-icon">
               <InstallIcon />
             </div>
-            <h3>Install in 60 Seconds</h3>
+            <h3>Install from GHL Marketplace</h3>
             <p>
-              One-click GHL snapshot. All pipelines, workflows, and AI agents pre-built.
-              You walk in, everything's already running.
+              One click. Free. The app installs into your agency account and gives you
+              access to 50M+ verified contacts across 41 audience segments.
             </p>
           </div>
 
@@ -258,22 +287,22 @@ function App() {
             <div className="how-icon">
               <LeadsIcon />
             </div>
-            <h3>Buy Your Leads</h3>
+            <h3>Buy Verified Contacts</h3>
             <p>
-              Pick your market, apply filters, pay per contact. Leads land in your CRM
-              instantly — verified against 15 data points.
+              Pick your market, apply filters, pay $0.25 per contact. Every record verified
+              against 15 data points before it reaches you. No junk.
             </p>
           </div>
 
           <div className="how-card">
             <div className="how-step-number">03</div>
             <div className="how-icon">
-              <SandyIcon />
+              <MarkupIcon />
             </div>
-            <h3>Sandy Takes Over</h3>
+            <h3>Resell at Your Markup</h3>
             <p>
-              AI texts, calls, qualifies, books. You just show up and close. Sandy
-              never sleeps, never forgets a follow-up.
+              Push contacts to your sub-account clients at $0.50, $0.75, $1.00 — whatever
+              the market bears. You keep every cent of the spread.
             </p>
           </div>
         </div>
@@ -289,44 +318,18 @@ function App() {
 
         {!isVerifying && !verificationDone && (
           <form className="demo-form" onSubmit={handleDemoSubmit}>
-            <input
-              type="text"
-              placeholder="Full name"
-              value={demoForm.name}
-              onChange={(e) => setDemoForm((f) => ({ ...f, name: e.target.value }))}
-              required
-            />
-            <input
-              type="email"
-              placeholder="Email address"
-              value={demoForm.email}
-              onChange={(e) => setDemoForm((f) => ({ ...f, email: e.target.value }))}
-              required
-            />
-            <input
-              type="tel"
-              placeholder="Phone number"
-              value={demoForm.phone}
-              onChange={(e) => setDemoForm((f) => ({ ...f, phone: e.target.value }))}
-            />
-            <input
-              type="text"
-              placeholder="State"
-              value={demoForm.state}
-              onChange={(e) => setDemoForm((f) => ({ ...f, state: e.target.value }))}
-            />
-            <button type="submit" className="demo-submit">
-              Run Verification
-            </button>
+            <input type="text" placeholder="Full name" value={demoForm.name} onChange={(e) => setDemoForm((f) => ({ ...f, name: e.target.value }))} required />
+            <input type="email" placeholder="Email address" value={demoForm.email} onChange={(e) => setDemoForm((f) => ({ ...f, email: e.target.value }))} required />
+            <input type="tel" placeholder="Phone number" value={demoForm.phone} onChange={(e) => setDemoForm((f) => ({ ...f, phone: e.target.value }))} />
+            <input type="text" placeholder="State" value={demoForm.state} onChange={(e) => setDemoForm((f) => ({ ...f, state: e.target.value }))} />
+            <button type="submit" className="demo-submit">Run Verification</button>
           </form>
         )}
 
         {(isVerifying || verificationDone) && (
           <div className="verification-container">
             <div className="verification-header">
-              <h3>
-                {isVerifying ? 'Verifying contact data...' : 'Verification Complete'}
-              </h3>
+              <h3>{isVerifying ? 'Verifying contact data...' : 'Verification Complete'}</h3>
               <p>Checking against 15 data points</p>
             </div>
 
@@ -334,7 +337,7 @@ function App() {
               {checks.map((check, idx) => (
                 <li key={idx} className={`check-item ${check.status}`}>
                   <div className="check-icon">
-                    {check.status === 'pending' && <span style={{ color: '#333' }}>●</span>}
+                    {check.status === 'pending' && <span style={{ color: '#333' }}>&#9679;</span>}
                     {check.status === 'checking' && <div className="spinner" />}
                     {check.status === 'done' && (
                       <span className={check.pass ? 'pass' : 'fail'}>
@@ -343,17 +346,7 @@ function App() {
                     )}
                   </div>
                   <span className="check-label">{check.label}</span>
-                  <span
-                    className={`check-status ${
-                      check.status === 'done'
-                        ? check.pass
-                          ? 'pass'
-                          : 'fail'
-                        : check.status === 'checking'
-                        ? 'checking-text'
-                        : ''
-                    }`}
-                  >
+                  <span className={`check-status ${check.status === 'done' ? (check.pass ? 'pass' : 'fail') : check.status === 'checking' ? 'checking-text' : ''}`}>
                     {check.status === 'pending' && ''}
                     {check.status === 'checking' && 'checking...'}
                     {check.status === 'done' && STATUS_TEXT[check.label]}
@@ -368,19 +361,13 @@ function App() {
                   <ScoreCircle passed={passed} total={15} />
                 </div>
                 <h3>{passed} of 15 Data Points Verified</h3>
-                <p>This contact scores above the verification threshold</p>
+                <p>This is the quality your clients receive. Every contact, every time.</p>
                 <div className="score-breakdown">
-                  <div className="breakdown-item">
-                    <div className="breakdown-dot pass" />
-                    <span>{passed} passed</span>
-                  </div>
-                  <div className="breakdown-item">
-                    <div className="breakdown-dot fail" />
-                    <span>{failed} failed</span>
-                  </div>
+                  <div className="breakdown-item"><div className="breakdown-dot pass" /><span>{passed} passed</span></div>
+                  <div className="breakdown-item"><div className="breakdown-dot fail" /><span>{failed} failed</span></div>
                 </div>
-                <a href={CHECKOUT_URL} className="score-card-cta">
-                  Get Leads Like This — Start Free Month
+                <a href={LEADS_URL} className="score-card-cta">
+                  Buy Verified Contacts Now — $0.25 Each
                 </a>
               </div>
             )}
@@ -388,126 +375,116 @@ function App() {
         )}
       </section>
 
-      {/* ─── WHAT'S INCLUDED ─── */}
+      {/* ─── WHAT YOU GET ─── */}
       <section className="features-section">
-        <h2>What's Included</h2>
+        <h2>What You Get</h2>
         <div className="rainbow-line" />
         <p className="features-subtitle">
-          Everything you need to run a fully automated sales operation — inside GHL.
+          Everything included with the free Data Driver app.
         </p>
 
         <div className="features-grid">
           <div className="feature-card">
-            <div className="feature-icon">💬</div>
-            <h3>Sandy AI (SMS + Voice)</h3>
-            <p>Qualifies leads 24/7 via text and phone. Warm, direct, never robotic.</p>
+            <div className="feature-icon">&#128200;</div>
+            <h3>50M+ Verified Contacts</h3>
+            <p>National database. 41 audience segments. Filter by state, age, income, credit, homeowner status, and more.</p>
           </div>
           <div className="feature-card">
-            <div className="feature-icon">📞</div>
-            <h3>6 VAPI Voice Assistants</h3>
-            <p>Inbound and outbound AI calling. Handles objections, books appointments.</p>
+            <div className="feature-icon">&#9989;</div>
+            <h3>15-Point Verification</h3>
+            <p>Every contact verified before delivery. Name, email, phone, company, intent signals — all confirmed.</p>
           </div>
           <div className="feature-card">
-            <div className="feature-icon">🎥</div>
-            <h3>Sandy Live Avatar</h3>
-            <p>AI video sales calls. Sandy shows up on screen so your leads feel heard.</p>
+            <div className="feature-icon">&#9889;</div>
+            <h3>Instant GHL Delivery</h3>
+            <p>Contacts land directly in your GHL pipeline. Tagged, fielded, and ready for outreach. No CSV imports.</p>
           </div>
           <div className="feature-card">
-            <div className="feature-icon">📊</div>
-            <h3>Lead Scoring Engine</h3>
-            <p>Scores 0–100 across 15 data points. You only work the hottest contacts.</p>
+            <div className="feature-icon">&#128176;</div>
+            <h3>White-Label Ready</h3>
+            <p>Your clients never see Data Driver. They see your brand, your agency, your pricing. You own the relationship.</p>
           </div>
           <div className="feature-card">
-            <div className="feature-icon">🔁</div>
-            <h3>Pre-Built Pipelines</h3>
-            <p>Lead → Appointment → Close → Onboard. Every stage mapped and automated.</p>
+            <div className="feature-icon">&#128202;</div>
+            <h3>Lead Scoring</h3>
+            <p>Every contact scored 0-100 across 15 data points. Your clients get the hottest leads first.</p>
           </div>
           <div className="feature-card">
-            <div className="feature-icon">⏰</div>
-            <h3>Automated Follow-Up</h3>
-            <p>No-show recovery, re-engagement sequences, drip nurture campaigns.</p>
-          </div>
-          <div className="feature-card">
-            <div className="feature-icon">🎙️</div>
-            <h3>Call Recording + AI Analysis</h3>
-            <p>Every call transcribed and summarized. Know what's working and what's not.</p>
-          </div>
-          <div className="feature-card">
-            <div className="feature-icon">🖥️</div>
-            <h3>Landing Pages + Funnels</h3>
-            <p>AI-generated pages inside your GHL account. Built and live in minutes.</p>
+            <div className="feature-icon">&#128197;</div>
+            <h3>Sandy AI Assistant</h3>
+            <p>Optional: Sandy texts and qualifies your leads automatically. She books appointments while you sleep.</p>
           </div>
         </div>
       </section>
 
       {/* ─── PRICING ─── */}
       <section className="pricing-section">
-        <h2>Simple Pricing</h2>
+        <h2>Pricing</h2>
         <div className="rainbow-line" />
-        <p className="pricing-subtitle">One plan. Everything included. Cancel anytime.</p>
+        <p className="pricing-subtitle">No subscription. No monthly fees. Just pay for what you use.</p>
 
         <div className="pricing-card">
-          <div className="pricing-badge">Most Popular</div>
-          <div className="pricing-name">Data Driver Pro</div>
+          <div className="pricing-badge">Pay Per Contact</div>
+          <div className="pricing-name">Data Driver</div>
           <div className="pricing-amount">
-            <span className="pricing-dollar">$</span>997
-            <span className="pricing-period">/mo</span>
+            <span className="pricing-dollar">$</span>0.25
+            <span className="pricing-period">/contact</span>
           </div>
-          <div className="pricing-trial">First month FREE with your first lead purchase</div>
+          <div className="pricing-trial">Free to install. 14-day trial. Buy when you're ready.</div>
 
           <ul className="pricing-features">
-            <li><span className="pricing-check">✓</span> Sandy AI — SMS + Voice qualification</li>
-            <li><span className="pricing-check">✓</span> 6 VAPI Voice Assistants</li>
-            <li><span className="pricing-check">✓</span> Sandy Live Avatar video calls</li>
-            <li><span className="pricing-check">✓</span> Lead Scoring Engine (15 data points)</li>
-            <li><span className="pricing-check">✓</span> Pre-Built GHL Pipelines</li>
-            <li><span className="pricing-check">✓</span> Automated Follow-Up Sequences</li>
-            <li><span className="pricing-check">✓</span> Call Recording + AI Analysis</li>
-            <li><span className="pricing-check">✓</span> Landing Pages + Funnels</li>
-            <li><span className="pricing-check">✓</span> 2,000 verified contacts/month ($500 value)</li>
-            <li><span className="pricing-check">✓</span> Full GHL snapshot — ready in 60 seconds</li>
-            <li><span className="pricing-check">✓</span> Cancel anytime, no contracts</li>
+            <li><span className="pricing-check">&#10003;</span> Free GHL Marketplace install</li>
+            <li><span className="pricing-check">&#10003;</span> 50M+ verified contacts</li>
+            <li><span className="pricing-check">&#10003;</span> 41 audience segments</li>
+            <li><span className="pricing-check">&#10003;</span> 15-point verification on every record</li>
+            <li><span className="pricing-check">&#10003;</span> Instant GHL pipeline delivery</li>
+            <li><span className="pricing-check">&#10003;</span> White-label — sell at your markup</li>
+            <li><span className="pricing-check">&#10003;</span> Lead scoring engine included</li>
+            <li><span className="pricing-check">&#10003;</span> No minimums, no contracts</li>
+            <li><span className="pricing-check">&#10003;</span> Sandy AI assistant (optional add-on)</li>
           </ul>
 
-          <a href={CHECKOUT_URL} className="pricing-cta">
-            Start Free Month
+          <a href={MARKETPLACE_URL} className="pricing-cta">
+            Install Free from GHL Marketplace
           </a>
           <div className="pricing-fine-print">
-            $0.25/contact for additional leads. No minimums.
+            Volume pricing: $0.20/contact at 5,000+
           </div>
         </div>
       </section>
 
-      {/* ─── SANDY SECTION ─── */}
+      {/* ─── THE AGENCY PLAY ─── */}
       <section className="sandy-section">
         <div className="sandy-content">
           <div className="sandy-text">
-            <div className="sandy-eyebrow">Your AI Sales Assistant</div>
-            <h2>Meet Sandy</h2>
+            <div className="sandy-eyebrow">The Agency Play</div>
+            <h2>Turn $250 Into $500+</h2>
             <div className="rainbow-line rainbow-line-left" />
             <p>
-              Sandy Beach is your AI sales assistant. She's warm, direct, and never sleeps.
+              You're already managing sub-accounts. Your clients already need leads.
+              Stop sending them to third-party providers — become the provider.
             </p>
             <p>
-              She'll text your leads within 60 seconds of them coming in, qualify them through
-              natural conversation, handle objections, and book appointments on your calendar —
-              without you lifting a finger.
+              Buy 1,000 contacts from Data Driver at $0.25 each. That's $250.
+              Distribute 100 contacts to each of 10 sub-account clients at $0.50 each.
+              That's $500 back. You just doubled your money on a single batch.
             </p>
             <p>
-              While you're on a call, Sandy's already working the next 50 leads. While you
-              sleep, she's following up on no-shows. You show up to close. That's it.
+              Scale it up: 5,000 contacts at $0.20 each = $1,000.
+              Sell at $0.75/contact = $3,750. Profit: $2,750.
+              Run that every month.
             </p>
-            <a href={CHECKOUT_URL} className="sandy-cta">
-              Let Sandy Work For You
+            <a href={LEADS_URL} className="sandy-cta">
+              Buy Your First Batch
             </a>
           </div>
           <div className="sandy-avatar">
             <div className="sandy-avatar-placeholder">
               <div className="sandy-avatar-glow" />
               <div className="sandy-avatar-inner">
-                <div className="sandy-avatar-icon">🤖</div>
-                <div className="sandy-avatar-label">Sandy Live Avatar</div>
-                <div className="sandy-avatar-sub">AI Video Sales Calls</div>
+                <div className="sandy-avatar-icon">&#128176;</div>
+                <div className="sandy-avatar-label">Your Markup</div>
+                <div className="sandy-avatar-sub">Your Profit</div>
               </div>
             </div>
           </div>
@@ -521,37 +498,41 @@ function App() {
 
         <div className="faq-list">
           <FaqItem
-            question="What is Data Driver Pro?"
-            answer="Data Driver Pro is a full AI sales automation platform built inside GoHighLevel. It includes Sandy (your AI assistant), pre-built pipelines, lead scoring, 6 voice AI agents, and verified intent data — everything wired together and ready to run the moment you install."
+            question="What is Data Driver?"
+            answer="A GHL Marketplace app that gives you access to 50M+ verified contacts at $0.25 each. Install it free, buy leads when you're ready, and resell them to your sub-account clients at whatever markup you choose."
           />
           <FaqItem
-            question="How do I get started?"
-            answer="Install the GHL snapshot, connect your calendar, and buy your first batch of leads. The whole setup takes under 3 minutes. Sandy starts texting and calling your leads automatically."
+            question="How do I make money with this?"
+            answer="Buy contacts at $0.25 each. Sell access to your sub-account clients at $0.50, $0.75, or $1.00 per contact. You keep the spread. Most agencies clear $500+ in the first two weeks just from the markup."
           />
           <FaqItem
-            question="What kind of leads am I getting?"
-            answer="Verified intent contacts — people actively searching for what you offer. Every contact goes through 15-point verification before landing in your CRM. You pay $0.25 per contact, no minimums."
+            question="What kind of contacts?"
+            answer="Verified intent contacts — people actively searching for services in your niche. Every record goes through 15-point verification: name, email, phone, company, LinkedIn, income, credit, homeowner status, and more."
           />
           <FaqItem
-            question="Do I need GoHighLevel?"
-            answer="Yes. Data Driver Pro lives inside GHL sub-accounts. If you don't have GHL, you'll need it — but setup is included and we'll walk you through it."
+            question="Is there a subscription?"
+            answer="No. The app is free to install. You only pay when you buy contacts — $0.25 each, or $0.20 at volume (5,000+). No monthly fees, no contracts, no minimums."
           />
           <FaqItem
-            question="Can I cancel?"
-            answer="Yes, anytime. No contracts, no cancellation fees. If it's not working for you, you stop paying. That's it."
+            question="Do my clients see Data Driver?"
+            answer="No. It's fully white-label. Your clients see your agency name, your pricing, your brand. They never know where the data comes from."
           />
           <FaqItem
-            question="What does Sandy actually do?"
-            answer="Sandy texts every new lead within 60 seconds. She qualifies them through natural conversation, handles common objections, and books appointments directly on your calendar. She also does outbound calls via VAPI, manages no-show follow-up, and runs re-engagement sequences. You just close."
+            question="What about Sandy?"
+            answer="Sandy is our AI sales assistant — she can text, call, qualify, and book appointments from your leads automatically. She's available as an optional add-on for agencies that want full automation, not just data."
+          />
+          <FaqItem
+            question="What if the leads don't convert?"
+            answer="Every contact is verified against 15 data points before delivery. You're not buying a list — you're buying verified people with active intent signals. That said, there's no commitment. Buy 100 contacts for $25 and test it."
           />
         </div>
       </section>
 
-      {/* ─── NOTIFY / SECONDARY CTA ─── */}
+      {/* ─── NOTIFY ─── */}
       <section className="notify-section">
-        <h3>Not ready yet? Get notified when new features drop.</h3>
+        <h3>Not ready yet? Get notified when new segments drop.</h3>
         <div className="rainbow-line" />
-        <p>We ship fast. Drop your email and we'll keep you in the loop.</p>
+        <p>New markets and features ship weekly. Drop your email.</p>
 
         {notifySuccess ? (
           <div className="waitlist-success">
@@ -559,26 +540,9 @@ function App() {
           </div>
         ) : (
           <form className="waitlist-form" onSubmit={handleNotifySubmit}>
-            <input
-              type="text"
-              placeholder="Your name"
-              value={notifyForm.name}
-              onChange={(e) => setNotifyForm((f) => ({ ...f, name: e.target.value }))}
-              required
-            />
-            <input
-              type="email"
-              placeholder="Email address"
-              value={notifyForm.email}
-              onChange={(e) => setNotifyForm((f) => ({ ...f, email: e.target.value }))}
-              required
-            />
-            <input
-              type="text"
-              placeholder="Company (optional)"
-              value={notifyForm.company}
-              onChange={(e) => setNotifyForm((f) => ({ ...f, company: e.target.value }))}
-            />
+            <input type="text" placeholder="Your name" value={notifyForm.name} onChange={(e) => setNotifyForm((f) => ({ ...f, name: e.target.value }))} required />
+            <input type="email" placeholder="Email address" value={notifyForm.email} onChange={(e) => setNotifyForm((f) => ({ ...f, email: e.target.value }))} required />
+            <input type="text" placeholder="Company (optional)" value={notifyForm.company} onChange={(e) => setNotifyForm((f) => ({ ...f, company: e.target.value }))} />
             <button type="submit" className="waitlist-submit" disabled={notifySubmitting}>
               {notifySubmitting ? 'Saving...' : 'Get Notified'}
             </button>
